@@ -26,50 +26,8 @@ frontend/
 └── README.md          # This file
 ```
 
-## 🌐 **How to Deploy**
 
-### **Option 1: Simple File Server (Recommended for Testing)**
 
-1. **Using Python (if installed):**
-   ```bash
-   cd frontend
-   python -m http.server 8000
-   ```
-   Then open: http://localhost:8000
-
-2. **Using Node.js (if installed):**
-   ```bash
-   cd frontend
-   npx http-server -p 8000
-   ```
-   Then open: http://localhost:8000
-
-3. **Using PHP (if installed):**
-   ```bash
-   cd frontend
-   php -S localhost:8000
-   ```
-   Then open: http://localhost:8000
-
-### **Option 2: GitHub Pages (Free Hosting)**
-
-1. Create a new GitHub repository
-2. Upload all frontend files to the repository
-3. Go to Settings → Pages
-4. Select source branch (usually `main`)
-5. Your site will be available at: `https://username.github.io/repository-name`
-
-### **Option 3: Netlify (Free Hosting)**
-
-1. Go to [netlify.com](https://netlify.com)
-2. Drag and drop the `frontend` folder
-3. Your site will be deployed instantly with a free URL
-
-### **Option 4: Vercel (Free Hosting)**
-
-1. Go to [vercel.com](https://vercel.com)
-2. Connect your GitHub repository
-3. Deploy automatically with each push
 
 ## 🔧 **How It Works**
 
