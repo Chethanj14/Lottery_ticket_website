@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Draw • TickBuyEarn</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="data.js"></script>
+    <script defer src="app.js"></script>
+</head>
+<body>
+<div class="container">
+    <header class="header subheader">
+        <div class="logo">TickBuyEarn</div>
+        <button id="backBtn" class="btn secondary">Back</button>
+    </header>
+
+    <!-- Upcoming Draws Section -->
+    <section>
+        <h2>Upcoming Draws</h2>
+        <div id="upcomingDraws" class="draws-grid"></div>
+    </section>
+
+    <!-- Active Draws Section -->
+    <section>
+        <h2>Active Draws</h2>
+        <div id="activeDraws" class="draws-grid"></div>
+    </section>
+
+    <!-- Completed Draws Section -->
+    <section>
+        <h2>Recent Results</h2>
+        <div id="completedDraws" class="draws-grid"></div>
+    </section>
+
+    <!-- My Tickets Section -->
+    <section>
+        <h2>My Tickets</h2>
+        <div id="myTickets" class="tickets-grid"></div>
+    </section>
+</div>
+
+<nav class="bottom-nav" aria-label="Navigation">
+    <button id="homeBtn" class="btn primary">Home</button>
+    <button id="refreshBtn" class="btn secondary">Refresh</button>
+</nav>
+</body>
+</html>
+
+

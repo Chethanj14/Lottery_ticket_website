@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tickets • TickBuyEarn</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="data.js"></script>
+    <script defer src="app.js"></script>
+</head>
+<body>
+<div class="container">
+    <header class="header subheader">
+        <div class="logo">TickBuyEarn</div>
+        <button id="backBtn" class="btn secondary">Back</button>
+    </header>
+
+    <section>
+        <h2 id="ticketsTitle" style="margin-top:0">Tickets</h2>
+        <div id="ticketsGrid" class="price-grid" aria-live="polite"></div>
+    </section>
+
+    <section class="stats">
+        <div class="stat-card">
+            <h3>CurrentBuyerTicket</h3>
+            <div id="currentSelection" class="chips"></div>
+        </div>
+        <div class="stat-card">
+            <h3>Till Now Tickets Sold</h3>
+            <div id="soldSummary" class="chips"></div>
+        </div>
+    </section>
+</div>
+
+<nav class="bottom-nav three" aria-label="Purchase actions">
+    <button id="homeBtn" class="btn primary">Buy</button>
+    <button id="checkoutBtn" class="btn secondary">Buy Tickets</button>
+    <button id="goDrawBtn" class="btn secondary">Draw</button>
+</nav>
+</body>
+</html>
+
+

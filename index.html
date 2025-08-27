@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TickBuyEarn</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="data.js"></script>
+    <script defer src="app.js"></script>
+    <meta name="description" content="TickBuyEarn - Select ticket price and participate in draws" />
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+<div class="container">
+    <header class="header hero">
+        <div class="logo" aria-label="TickBuyEarn">TickBuyEarn</div>
+        <p class="muted">Big wins start with a click. Choose your ticket price.</p>
+        <div style="background: rgba(46,160,67,0.2); color: #2ea043; padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; margin-top: 8px;">
+          🚀 ITS A TIME TO WIN AND START WITH YOUR POCKET MONEY
+        </div>
+    </header>
+
+    <main>
+        <section>
+            <div id="priceGrid" class="price-grid" aria-label="Price options grid">
+                <!-- Populated by app.js -->
+            </div>
+        </section>
+    </main>
+</div>
+
+<nav class="bottom-nav" aria-label="Primary actions">
+    <button id="buyBtn" class="btn primary">Buy</button>
+    <button id="drawBtn" class="btn secondary">Draw</button>
+    </nav>
+</body>
+</html>
+
+

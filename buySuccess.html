@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Purchase Successful • TickBuyEarn</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const data = localStorage.getItem('tbe_last_purchase');
+        let info = null;
+        try { info = JSON.parse(data || 'null'); } catch {}
+        const box = document.getElementById('summary');
+        if (!info) {
+          box.textContent = 'No recent purchase found.';
+          return;
+        }
+        box.innerHTML = `
+          <div style="font-size:18px;font-weight:700;margin-bottom:8px;">Thank you! 🎉</div>
+          <div>You purchased <b>${info.count}</b> ticket(s) for <b>₹${info.price}</b> each.</div>
+          <div style="margin:6px 0 8px;">Total paid: <b>₹${info.amount}</b></div>
+          <div style="margin-top:6px;">Tickets: ${info.tickets.map(n=>`<span class='chip'>Ticket ${n}</span>`).join(' ')}</div>
+        `;
+      });
+    </script>
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <div class="logo">TickBuyEarn</div>
+    <p class="muted">Your purchase was successful.</p>
+  </header>
+
+  <section class="stat-card" id="summary">Loading...</section>
+
+  <div style="display:flex; gap:8px; margin-top:16px;">
+    <a href="index.html" class="btn primary" style="text-decoration:none; text-align:center;">Buy More</a>
+    <a href="draw.html" class="btn secondary" style="text-decoration:none; text-align:center;">Go to Draw</a>
+  </div>
+</div>
+<nav class="bottom-nav" aria-label="Primary actions">
+  <button class="btn primary" onclick="location.href='index.html'">Buy</button>
+  <button class="btn secondary" onclick="location.href='draw.html'">Draw</button>
+  </nav>
+</body>
+</html>
+
+

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout • TickBuyEarn</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script defer src="data.js"></script>
+  <script>
+    function byId(id){return document.getElementById(id)}
+    function readCheckout(){try{return JSON.parse(localStorage.getItem('tbe_checkout')||'null')}catch{return null}}
+    function saveCheckout(data){localStorage.setItem('tbe_checkout', JSON.stringify(data))}
+    function formatTickets(arr){return arr.map(n=>`<span class='chip'>Ticket ${n}</span>`).join(' ')}
+    document.addEventListener('DOMContentLoaded', () => {
+      const info = readCheckout();
+      if(!info){
+        byId('summary').innerHTML = '<div class="note">No selection found. Please pick tickets again.</div>'
+        return;
+      }
+      byId('summary').innerHTML = `
+        <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+          <div class="pill">Price: ₹${info.price}</div>
+          <div class="pill">Tickets: ${info.tickets.length}</div>
+          <div class="pill">Total: ₹${info.total}</div>
+        </div>
+        <div style="margin-top:10px;">${formatTickets(info.tickets)}</div>
+      `
+
+      const payBtn = byId('payBtn')
+      payBtn.addEventListener('click', () => {
+        const name = byId('buyerName').value.trim()
+        const mobile = byId('buyerMobile').value.trim()
+        const upiId = byId('buyerUpi').value.trim()
+        
+        if(!name || !mobile || !upiId){ 
+          alert('Please enter your name, mobile number, and UPI ID.'); 
+          return 
+        }
+
+        // Show payment processing
+        payBtn.disabled = true
+        payBtn.textContent = 'Processing...'
+        
+        // Create payment request
+        const paymentRequest = {
+          userId: 1, // In production, this would be the actual user ID
+          ticketIds: info.tickets,
+          amount: info.total,
+          upiId: upiId,
+          phoneNumber: mobile
+        }
+        
+        // Use local payment service
+        const data = window.tickBuyEarnData.createPayment(paymentRequest);
+        if (data.status === 'created') {
+          // Show UPI payment options
+          showUPIPayment(data, info)
+        } else {
+          alert('Payment creation failed: ' + data.message)
+          payBtn.disabled = false
+          payBtn.textContent = 'Pay via UPI'
+        }
+      })
+      
+      function showUPIPayment(paymentData, ticketInfo) {
+        const paymentModal = document.createElement('div')
+        paymentModal.className = 'payment-modal'
+        paymentModal.innerHTML = `
+          <div class="payment-content">
+            <h3>UPI Payment</h3>
+            <p>Amount: ₹${ticketInfo.total}</p>
+            <p>Order ID: ${paymentData.orderId}</p>
+            
+            <div class="upi-options">
+              <div class="upi-option">
+                <h4>Option 1: Scan QR Code</h4>
+                <img src="${paymentData.qrCodeUrl}" alt="UPI QR Code" style="width: 200px; height: 200px;">
+                <p>Scan with any UPI app (GPay, PhonePe, Paytm, etc.)</p>
+              </div>
+              
+              <div class="upi-option">
+                <h4>Option 2: Deep Link</h4>
+                <button onclick="window.location.href='${paymentData.upiIntentUrl}'" class="btn primary">
+                  Pay with UPI App
+                </button>
+                <p>Click to open your UPI app directly</p>
+              </div>
+            </div>
+            
+            <div class="payment-actions">
+              <button onclick="checkPaymentStatus('${paymentData.orderId}')" class="btn secondary">
+                Check Payment Status
+              </button>
+              <button onclick="closePaymentModal()" class="btn secondary">
+                Close
+              </button>
+            </div>
+          </div>
+        `
+        document.body.appendChild(paymentModal)
+      }
+      
+      function checkPaymentStatus(orderId) {
+        const data = window.tickBuyEarnData.checkPaymentStatus(orderId);
+        if (data.status === 'COMPLETED') {
+          alert('Payment successful! Redirecting to success page...')
+          const lastPurchase = { 
+            name: byId('buyerName').value.trim(), 
+            mobile: byId('buyerMobile').value.trim(), 
+            price: ticketInfo.price, 
+            count: ticketInfo.tickets.length, 
+            amount: ticketInfo.total, 
+            tickets: ticketInfo.tickets 
+          }
+          localStorage.setItem('tbe_last_purchase', JSON.stringify(lastPurchase))
+          window.location.href = 'buySuccess.html'
+        } else {
+          alert('Payment status: ' + data.message)
+        }
+      }
+      
+      function closePaymentModal() {
+        const modal = document.querySelector('.payment-modal')
+        if (modal) {
+          modal.remove()
+        }
+        // Reset button
+        byId('payBtn').disabled = false
+        byId('payBtn').textContent = 'Pay via UPI'
+      }
+    })
+  </script>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="logo">TickBuyEarn</div>
+      <p class="muted">Provide your details to complete the purchase.</p>
+    </header>
+
+    <section class="stat-card" id="summary">Loading summary...</section>
+
+    <section class="stat-card">
+      <h3 style="margin-top:0;">Buyer information</h3>
+      <div class="form">
+        <div class="row">
+          <div class="field">
+            <label for="buyerName">Full name</label>
+            <input id="buyerName" placeholder="e.g. Rahul Sharma" />
+          </div>
+          <div class="field">
+            <label for="buyerMobile">Mobile number</label>
+            <input id="buyerMobile" placeholder="e.g. 98765 43210" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="buyerUpi">UPI ID</label>
+            <input id="buyerUpi" placeholder="e.g. rahul@okicici or 9876543210@ybl" />
+          </div>
+        </div>
+        <div class="note">We will use this for draw notifications and receipts.</div>
+      </div>
+    </section>
+
+    <section class="stat-card rules">
+      <h4>Payment and prize rules</h4>
+      <ul>
+        <li>Total tickets available depend on price tier. Sold tickets are locked to the buyer.</li>
+        <li>If not all tickets are sold before the draw, only the sold tickets are considered valid for the draw.</li>
+        <li>Owner’s share is 10% of the total sold amount for that price tier.</li>
+        <li>The remaining 90% is awarded to a single winner selected from the valid sold tickets.</li>
+      </ul>
+      <p class="note">Example: If 85 out of 100 tickets are sold at ₹100 each, the total pool is ₹8,500. Owner receives ₹850 (10%) and the winner receives ₹7,650 (90%).</p>
+    </section>
+
+    <div style="display:flex; gap:8px;">
+      <a href="tickets.html" class="btn secondary" style="text-decoration:none; text-align:center;">Back</a>
+      <button id="payBtn" class="btn primary">Pay via UPI</button>
+    </div>
+  </div>
+  <nav class="bottom-nav" aria-label="Primary actions">
+    <button class="btn primary" onclick="location.href='index.html'">Buy</button>
+    <button class="btn secondary" onclick="location.href='draw.html'">Draw</button>
+  </nav>
+</body>
+</html>
+
+
